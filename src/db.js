@@ -120,6 +120,8 @@ export function toggleTask(id) {
 
 // Remove uma tarefa
 export function deleteTask(id) {
+  const comments = getComments(id).filter(c => c.taskId !== id)
+  //comments.forEach(c => deleteComment(id, c.id))
   const tasks = getTasks().filter(t => t.id !== id)
   saveTasks(tasks)
   return tasks
