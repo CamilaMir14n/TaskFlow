@@ -1,7 +1,12 @@
 import { createContext, useContext, useState } from 'react'
-import { getTasks, getNotes, addTask as dbAddTask, addNote as dbAddNote, toggleTask as dbToggle, deleteTask as dbDeleteTask, deleteNote as dbDeleteNote } from '../db'
+import {
+  getTasks, getComments, getNotes,
+  addTask as dbAddTask, addComment as dbAddComment, addNote as dbAddNote,
+  toggleTask as dbToggle,
+  deleteTask as dbDeleteTask, deleteComment as dbDeleteComment, deleteNote as dbDeleteNote } from '../db'
 
 const TaskContext = createContext(null)
+const CommentsContext = createContext(null)
 const NotesContext = createContext(null)
 
 export function TaskProvider({ children }) {
@@ -26,6 +31,24 @@ export function TaskProvider({ children }) {
   )
 }
 
+export function CommentsProvider({ taskId, children }) {
+  const [comments, setComments] = useState(() => getComments(taskId))
+
+  const addComment = (content) => {
+    setComments(dbAddComment(taskId, content))
+  }
+
+  const deleteComment = (commentId) => {
+    setComments(dbDeleteComment(taskId, commentId))
+  }
+
+  return (
+    <CommentsContext.Provider value={{ comments, addComment, deleteComment }}>
+      {children}
+    </CommentsContext.Provider>
+  )
+}
+
 export function NoteProvider({ children }) {
   const [notes, setNotes] = useState(() => getNotes())
 
@@ -46,6 +69,10 @@ export function NoteProvider({ children }) {
 
 export function useTasks() {
   return useContext(TaskContext)
+}
+
+export function useComments() {
+  return useContext(CommentsContext)
 }
 
 export function useNotes() {
