@@ -1,7 +1,9 @@
 // db.js — Banco de dados local (localStorage)
 // As tarefas persistem mesmo após fechar o navegador.
 
-const DB_KEY = 'taskflow_tasks'
+const DB_KEY_TASKS = 'taskflow_tasks'
+const DB_KEY_COMMENTS = 'taskflow_comments'
+const DB_KEY_NOTES = 'taskflow_notes'
 
 const DEFAULT_TASKS = [
   { id: 1, title: 'Estudar React JS', description: 'Revisar hooks e componentização', done: false },
@@ -19,7 +21,7 @@ const NOTES = [
 
 // Lê todas as tarefas
 export function getTasks() {
-  const raw = localStorage.getItem(DB_KEY)
+  const raw = localStorage.getItem(DB_KEY_TASKS)
   if (!raw) {
     saveTasks(DEFAULT_TASKS)
     return DEFAULT_TASKS
@@ -29,12 +31,17 @@ export function getTasks() {
 
 // Lê os comentários de uma tarefa
 export function getComments(taskId) {
-  return TASK_COMMENTS.filter(c => c.taskId === taskId)
+  const raw = localStorage.getItem(DB_KEY_COMMENTS)
+  if (!raw) {
+    saveComments(taskId, TASK_COMMENTS.filter(c => c.taskId === taskId))
+    return TASK_COMMENTS.filter(c => c.taskId === taskId)
+  }
+  return JSON.parse(raw).filter(c => c.taskId === taskId)
 }
 
 // Lê todas as notas
 export function getNotes() {
-  const raw = localStorage.getItem(DB_KEY)
+  const raw = localStorage.getItem(DB_KEY_NOTES)
   if (!raw){
     saveNotes(NOTES)
     return NOTES
@@ -44,19 +51,19 @@ export function getNotes() {
 
 // Salva a lista inteira
 export function saveTasks(tasks) {
-  localStorage.setItem(DB_KEY, JSON.stringify(tasks))
+  localStorage.setItem(DB_KEY_TASKS, JSON.stringify(tasks))
 }
 
 // Salva os comentários de uma tarefa
 export function saveComments(taskId, comments) {
   const others = TASK_COMMENTS.filter(c => c.taskId !== taskId)
   const updated = [...others, ...comments]
-  localStorage.setItem(DB_KEY, JSON.stringify(updated))
+  localStorage.setItem(DB_KEY_COMMENTS, JSON.stringify(updated))
 }
 
 // Salva todas as notas
 export function saveNotes(notes) {
-  localStorage.setItem(DB_KEY, JSON.stringify(notes))
+  localStorage.setItem(DB_KEY_NOTES, JSON.stringify(notes))
 }
 
 // Adiciona uma tarefa nova
@@ -133,6 +140,8 @@ export function deleteNote(id) {
 }
 
 // Apaga tudo (útil pra testes)
-export function clearTasks() {
-  localStorage.removeItem(DB_KEY)
+export function clearEverything() {
+  localStorage.removeItem(DB_KEY_TASKS)
+  localStorage.removeItem(DB_KEY_COMMENTS)
+  localStorage.removeItem(DB_KEY_NOTES)
 }
