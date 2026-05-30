@@ -1,13 +1,19 @@
 import { createContext, useContext, useState } from 'react'
-import { getTasks, addTask as dbAdd, toggleTask as dbToggle, deleteTask as dbDelete } from '../db'
+import {
+  getTasks, getComments, getNotes,
+  addTask as dbAddTask, addComment as dbAddComment, addNote as dbAddNote,
+  toggleTask as dbToggle,
+  deleteTask as dbDeleteTask, deleteComment as dbDeleteComment, deleteNote as dbDeleteNote } from '../db'
 
 const TaskContext = createContext(null)
+const CommentsContext = createContext(null)
+const NotesContext = createContext(null)
 
 export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState(() => getTasks())
 
   const addTask = (data) => {
-    setTasks(dbAdd(data))
+    setTasks(dbAddTask(data))
   }
 
   const toggleTask = (id) => {
@@ -15,7 +21,7 @@ export function TaskProvider({ children }) {
   }
 
   const deleteTask = (id) => {
-    setTasks(dbDelete(id))
+    setTasks(dbDeleteTask(id))
   }
 
   return (
@@ -25,6 +31,50 @@ export function TaskProvider({ children }) {
   )
 }
 
+export function CommentsProvider({ taskId, children }) {
+  const [comments, setComments] = useState(() => getComments(taskId))
+
+  const addComment = (content) => {
+    setComments(dbAddComment(taskId, content))
+  }
+
+  const deleteComment = (commentId) => {
+    setComments(dbDeleteComment(taskId, commentId))
+  }
+
+  return (
+    <CommentsContext.Provider value={{ comments, addComment, deleteComment }}>
+      {children}
+    </CommentsContext.Provider>
+  )
+}
+
+export function NoteProvider({ children }) {
+  const [notes, setNotes] = useState(() => getNotes())
+
+  const addNote = (data) => {
+    setNotes(dbAddNote(data))
+  }
+
+  const deleteNote = (id) => {
+    setNotes(dbDeleteNote(id))
+  }
+
+  return (
+    <NotesContext.Provider value={{ notes, addNote, deleteNote }}>
+      {children}
+    </NotesContext.Provider>
+  )
+}
+
 export function useTasks() {
   return useContext(TaskContext)
+}
+
+export function useComments() {
+  return useContext(CommentsContext)
+}
+
+export function useNotes() {
+  return useContext(NotesContext)
 }
