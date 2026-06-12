@@ -1,13 +1,32 @@
 import { createContext, useContext, useState } from 'react'
 import {
-  getTasks, getComments, getNotes,
-  addTask as dbAddTask, addComment as dbAddComment, addNote as dbAddNote,
+  getProjects, getTasks, getComments, getNotes,
+  addProject as dbAddProject, addTask as dbAddTask, addComment as dbAddComment, addNote as dbAddNote,
   toggleTask as dbToggle,
-  deleteTask as dbDeleteTask, deleteComment as dbDeleteComment, deleteNote as dbDeleteNote } from '../db'
+  deleteProject as dbDeleteProject, deleteTask as dbDeleteTask, deleteComment as dbDeleteComment, deleteNote as dbDeleteNote } from '../db'
 
+const ProjectContext = createContext(null)
 const TaskContext = createContext(null)
 const CommentsContext = createContext(null)
 const NotesContext = createContext(null)
+
+export function ProjectProvider({ children }) {
+  const [projects, setProjects] = useState(() => getProjects())
+
+  const addProject = (name) => {
+    setProjects(dbAddProject(name))
+  }
+
+  const deleteProject = (id) => {
+    setProjects(dbDeleteProject(id))
+  }
+
+  return (
+    <ProjectContext.Provider value={{ projects, addProject, deleteProject }}>
+      {children}
+    </ProjectContext.Provider>
+  )
+}
 
 export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState(() => getTasks())
@@ -65,6 +84,10 @@ export function NoteProvider({ children }) {
       {children}
     </NotesContext.Provider>
   )
+}
+
+export function useProjects() {
+  return useContext(ProjectContext)
 }
 
 export function useTasks() {
