@@ -1,0 +1,2 @@
+Remodelar o site.
+Página principal contém os projetos. Cada projeto contém tarefas e notas. Cada tarefa contém comentários
