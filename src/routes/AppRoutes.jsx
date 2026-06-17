@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Header from '../components/Header'
 import Home from '../pages/Home'
-import NovaTarefa from '../pages/NovaTarefa'
+import Projeto from '../pages/Projeto'
 
 export default function AppRoutes() {
   return (
@@ -9,7 +9,7 @@ export default function AppRoutes() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/nova" element={<NovaTarefa />} />
+        <Route path="/projeto/:id" element={<Projeto />} />
       </Routes>
     </BrowserRouter>
   )

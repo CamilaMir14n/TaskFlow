@@ -2,31 +2,28 @@ import { Link, useLocation } from 'react-router-dom'
 
 export default function Header() {
   const { pathname } = useLocation()
+  const isHome = pathname === '/'
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
-      <div className="max-w-2xl mx-auto flex items-center justify-between">
-        <Link to="/" className="font-['Playfair_Display'] text-2xl font-bold text-gray-900 tracking-tight">
-          TaskFlow
-        </Link>
-        <nav className="flex gap-2">
+    <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 px-5 py-3 backdrop-blur">
+      <div className="mx-auto flex max-w-5xl items-center gap-3">
+        {!isHome && (
           <Link
             to="/"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              pathname === '/' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'
-            }`}
+            className="grid h-9 w-9 place-items-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+            aria-label="Voltar"
           >
-            Tarefas
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="12,4 6,10 12,16" />
+            </svg>
           </Link>
-          <Link
-            to="/nova"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              pathname === '/nova' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            + Nova tarefa
-          </Link>
-        </nav>
+        )}
+        <Link to="/" className="flex items-center gap-3">
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-slate-950 text-xs font-bold text-white">
+            TF
+          </span>
+          <span className="text-lg font-bold tracking-tight text-slate-950">TaskFlow</span>
+        </Link>
       </div>
     </header>
   )

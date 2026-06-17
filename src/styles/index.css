@@ -4,7 +4,14 @@
 
 @layer base {
   body {
-    font-family: 'DM Sans', sans-serif;
-    @apply bg-gray-50 text-gray-900;
+    font-family: Inter, 'DM Sans', Arial, sans-serif;
+    @apply bg-slate-50 text-slate-900;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
   }
 }

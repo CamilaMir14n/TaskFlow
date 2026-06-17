@@ -1,80 +1,91 @@
 import { createContext, useContext, useState } from 'react'
 import {
-  getTasks, getComments, getNotes,
-  addTask as dbAddTask, addComment as dbAddComment, addNote as dbAddNote,
-  toggleTask as dbToggle,
-  deleteTask as dbDeleteTask, deleteComment as dbDeleteComment, deleteNote as dbDeleteNote } from '../db'
+  getProjetos,
+  addProjeto as dbAddProjeto,
+  deleteProjeto as dbDeleteProjeto,
+  getTarefas,
+  addTarefa as dbAddTarefa,
+  toggleTarefa as dbToggle,
+  deleteTarefa as dbDeleteTarefa,
+  getNotas,
+  addNota as dbAddNota,
+  deleteNota as dbDeleteNota,
+  getComentarios,
+  addComentario as dbAddComentario,
+  deleteComentario as dbDeleteComentario,
+} from '../db'
 
-const TaskContext = createContext(null)
-const CommentsContext = createContext(null)
-const NotesContext = createContext(null)
+const ProjetoCtx = createContext(null)
+const TarefaCtx = createContext(null)
+const NotaCtx = createContext(null)
+const ComentarioCtx = createContext(null)
 
-export function TaskProvider({ children }) {
-  const [tasks, setTasks] = useState(() => getTasks())
+export function ProjetoProvider({ children }) {
+  const [projetos, setProjetos] = useState(() => getProjetos())
 
-  const addTask = (data) => {
-    setTasks(dbAddTask(data))
-  }
-
-  const toggleTask = (id) => {
-    setTasks(dbToggle(id))
-  }
-
-  const deleteTask = (id) => {
-    setTasks(dbDeleteTask(id))
-  }
+  const addProjeto = (nome, cor) => setProjetos(dbAddProjeto(nome, cor))
+  const deleteProjeto = id => setProjetos(dbDeleteProjeto(id))
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, toggleTask, deleteTask }}>
+    <ProjetoCtx.Provider value={{ projetos, addProjeto, deleteProjeto }}>
       {children}
-    </TaskContext.Provider>
+    </ProjetoCtx.Provider>
   )
 }
 
-export function CommentsProvider({ taskId, children }) {
-  const [comments, setComments] = useState(() => getComments(taskId))
+export function TarefaProvider({ projetoId, children }) {
+  const [tarefas, setTarefas] = useState(() => getTarefas(projetoId))
 
-  const addComment = (content) => {
-    setComments(dbAddComment(taskId, content))
+  const addTarefa = data => setTarefas(dbAddTarefa(data))
+
+  const toggleTarefa = id => {
+    dbToggle(id)
+    setTarefas(getTarefas(projetoId))
   }
 
-  const deleteComment = (commentId) => {
-    setComments(dbDeleteComment(taskId, commentId))
-  }
-
-  return (
-    <CommentsContext.Provider value={{ comments, addComment, deleteComment }}>
-      {children}
-    </CommentsContext.Provider>
-  )
-}
-
-export function NoteProvider({ children }) {
-  const [notes, setNotes] = useState(() => getNotes())
-
-  const addNote = (data) => {
-    setNotes(dbAddNote(data))
-  }
-
-  const deleteNote = (id) => {
-    setNotes(dbDeleteNote(id))
+  const deleteTarefa = id => {
+    dbDeleteTarefa(id)
+    setTarefas(getTarefas(projetoId))
   }
 
   return (
-    <NotesContext.Provider value={{ notes, addNote, deleteNote }}>
+    <TarefaCtx.Provider value={{ tarefas, addTarefa, toggleTarefa, deleteTarefa }}>
       {children}
-    </NotesContext.Provider>
+    </TarefaCtx.Provider>
   )
 }
 
-export function useTasks() {
-  return useContext(TaskContext)
+export function NotaProvider({ projetoId, children }) {
+  const [notas, setNotas] = useState(() => getNotas(projetoId))
+
+  const addNota = data => setNotas(dbAddNota(data))
+
+  const deleteNota = id => {
+    dbDeleteNota(id)
+    setNotas(getNotas(projetoId))
+  }
+
+  return (
+    <NotaCtx.Provider value={{ notas, addNota, deleteNota }}>
+      {children}
+    </NotaCtx.Provider>
+  )
 }
 
-export function useComments() {
-  return useContext(CommentsContext)
+export function ComentarioProvider({ tarefaId, children }) {
+  const [comentarios, setComentarios] = useState(() => getComentarios(tarefaId))
+
+  const addComentario = conteudo => setComentarios(dbAddComentario(tarefaId, conteudo))
+  const deleteComentario = id => setComentarios(dbDeleteComentario(tarefaId, id))
+
+  return (
+    <ComentarioCtx.Provider value={{ comentarios, addComentario, deleteComentario }}>
+      {children}
+    </ComentarioCtx.Provider>
+  )
 }
 
-export function useNotes() {
-  return useContext(NotesContext)
-}
+export const useProjetos = () => useContext(ProjetoCtx)
+export const useTarefas = () => useContext(TarefaCtx)
+export const useNotas = () => useContext(NotaCtx)
+export const useComentarios = () => useContext(ComentarioCtx)
