@@ -1,10 +1,14 @@
-import { ProjetoProvider } from './context/TaskContext'
-import AppRoutes from './routes/AppRoutes'
+import { DataProvider } from './context/DataContext';
+import { ThemeProvider } from './context/ThemeContext'; // <-- Importação do tema
+import AppRoutes from './routes/AppRoutes';
 
 export default function App() {
   return (
-    <ProjetoProvider>
-      <AppRoutes />
-    </ProjetoProvider>
-  )
+    // O ThemeProvider precisa ficar por fora de tudo para "espalhar" o tema para o AppRoutes e o Header
+    <ThemeProvider>
+      <DataProvider>
+        <AppRoutes />
+      </DataProvider>
+    </ThemeProvider>
+  );
 }

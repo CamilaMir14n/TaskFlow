@@ -1,30 +1,26 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { Layers, Sun, Moon } from 'lucide-react';
+import { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function Header() {
-  const { pathname } = useLocation()
-  const isHome = pathname === '/'
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 px-5 py-3 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center gap-3">
-        {!isHome && (
-          <Link
-            to="/"
-            className="grid h-9 w-9 place-items-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
-            aria-label="Voltar"
-          >
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="12,4 6,10 12,16" />
-            </svg>
-          </Link>
-        )}
-        <Link to="/" className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-slate-950 text-xs font-bold text-white">
-            TF
-          </span>
-          <span className="text-lg font-bold tracking-tight text-slate-950">TaskFlow</span>
-        </Link>
-      </div>
+    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3 flex items-center justify-between transition-colors duration-300">
+      <Link to="/" className="flex items-center gap-2 font-bold text-xl text-gray-800 dark:text-white">
+        <div className="bg-gray-100 dark:bg-gray-700 p-1.5 rounded-md border border-gray-200 dark:border-gray-600">
+          <Layers size={20} className="text-gray-700 dark:text-gray-300" />
+        </div>
+        TaskFlow
+      </Link>
+
+      <button 
+        onClick={toggleTheme}
+        className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+      >
+        {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+      </button>
     </header>
-  )
+  );
 }
