@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import * as db from '../db.js'; // db.js intocado!
+import * as db from '../db.js';
 
 export const DataContext = createContext();
 
