@@ -13,13 +13,13 @@ export function DataProvider({ children }) {
   const [noteMap, setNoteMap] = useState({});
 
   useEffect(() => {
-    // Carrega do db.js original
+    
     const loadedTasks = db.getTasks();
     const loadedNotes = db.getNotes();
     setTasks(loadedTasks);
     setNotes(loadedNotes);
 
-    // Carrega nossa camada extra de projetos
+    
     const savedProjects = JSON.parse(localStorage.getItem('taskflow_ext_projects')) || [];
     const savedTaskMap = JSON.parse(localStorage.getItem('taskflow_ext_taskMap')) || {};
     const savedNoteMap = JSON.parse(localStorage.getItem('taskflow_ext_noteMap')) || {};
@@ -62,7 +62,7 @@ export function DataProvider({ children }) {
 
   const handleAddTask = (title, description, projectId) => {
     const updatedTasks = db.addTask({ title, description });
-    const newTask = updatedTasks[0]; // db.js adiciona no começo da lista
+    const newTask = updatedTasks[0]; 
     setTaskMap(prev => ({ ...prev, [newTask.id]: projectId }));
     setTasks(updatedTasks);
   };
